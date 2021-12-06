@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
 
     // the reveal of the fog once the player is moved
     [SerializeField] public int fogReveal = 1;
+    [SerializeField] public int moveLimit = 2;
     // extra fog tilemap
     [SerializeField] private Tilemap fogOfWar;
     [SerializeField] private Tilemap groundMap;
@@ -32,23 +33,47 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            transform.position = ReturnMousePos();
+            transform.position = MovePlayer();
         }
     }
 
+    public bool isTileEmpty(Vector3Int tile) // takes cell coords
+    {
+        bool returnVar;
 
+        if (groundMap.GetSprite(tile) == null)
+        {
+            returnVar = true;
+        } else
+        {
+            returnVar = false;
+        }
+
+        return returnVar;
+
+    }
 
     // https://stackoverflow.com/a/48353867 quite helpful, simple though.
-    public Vector3 ReturnMousePos()
+    public Vector3 MovePlayer()
     {
         Vector3Int var;
+        Vector3 returnVar;
 
         Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         pos.z = 0;
 
         var = groundMap.WorldToCell(pos);
 
-        return groundMap.CellToWorld(var);
+        if (isTileEmpty(var))
+        {
+            returnVar = transform.position; // returns the current position, so that you don't move.
+            Debug.Log("sorry, you cannot move to an empty tile");
+        } else
+        {
+            returnVar = groundMap.CellToWorld(var); // returns the new position
+        }
+
+        return returnVar;
     }
 
     public void UpdateFogOfWar()
