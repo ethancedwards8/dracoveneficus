@@ -6,11 +6,17 @@ public class InventoryController : MonoBehaviour
 {
 
     [SerializeField] List<string> inventory;
+    [SerializeField] List<string> itemDesc;
 
-//\\--------------------------------------------------------\\//
+    //\\--------------------------------------------------------\\//
     void Start()
     {
-        
+        AddItem("banana", "potassium");
+        AddItem("wabbajack", "it's all you've got");
+
+        RemoveItem(0);
+
+        ListInfo(0);
     }
 
     // Update is called once per frame
@@ -21,35 +27,31 @@ public class InventoryController : MonoBehaviour
 
 //\\--------------------------------------------------------\\//
 
-    void AddItem(string item, string description)  //adds item
+    void AddItem(string item, string description)        //adds item
     {
         inventory.Add(item);
+        itemDesc.Add(description);
     }
 
-    void RemoveItem(string item)       //gets rid of item
+    void RemoveItem(int itemNum)                    //gets rid of item
     {
-        inventory.Remove(item);
+        inventory.RemoveAt(itemNum);
+        itemDesc.RemoveAt(itemNum);
     }
 
-    void ListInfo(int item)               //lists description given to item requested
+    void ListInfo(int itemNum)                     //lists description given to item requested
     {
-        if (inventory.Exists(item))
+        if (inventory[itemNum] != null)
         {
-            //Debug.Log();
+            Debug.Log(itemDesc[itemNum]);
         }
         else
         {
-
+            Debug.Log("that doesn't exist");
         }
     }
-
-
-
-
-
-
-
-
+    
 
 
 }
+
