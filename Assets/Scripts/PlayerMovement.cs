@@ -9,26 +9,21 @@ public class PlayerMovement : MonoBehaviour
     // some code from this file is sourced from here: https://www.youtube.com/watch?v=bcPqdCSGCls&ab_channel=Unity
 
     // the reveal of the fog once the player is moved
-    [SerializeField] public int fogReveal = 1;
-    [SerializeField] public int moveLimit = 2;
+    [SerializeField] private int fogReveal = 1;
+    [SerializeField] private int moveLimit = 2;
     // extra fog tilemap
     [SerializeField] private Tilemap fogOfWar;
     [SerializeField] private Tilemap groundMap;
 
-    public LayerMask groundLayer;
+    [SerializeField] private Sprite waterSprite;
 
-    Vector3Int playerTile;
+    private LayerMask groundLayer;
 
-    // Start is called before the first frame update
-    void Start()
+    [HideInInspector] public Vector3Int entityTile;
+
+    private void Update()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        playerTile = this.groundMap.WorldToCell(transform.position);
+        entityTile = this.groundMap.WorldToCell(transform.position);
         UpdateFogOfWar();
 
         if (Input.GetMouseButtonDown(0))
@@ -37,11 +32,11 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public bool isTileEmpty(Vector3Int tile) // takes cell coords
+    public bool canMoveToTile(Vector3Int tile) // takes cell coords
     {
         bool returnVar;
 
-        if (groundMap.GetSprite(tile) == null)
+        if ((groundMap.GetSprite(tile) == null) || (groundMap.GetSprite(tile) == waterSprite))
         {
             returnVar = true;
         } else
@@ -53,8 +48,23 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    public bool MeasureBetweenTiles(Vector3Int firstTile, Vector3Int secondTile)
+    {
+        bool returnVal = false;
+
+        if (Vector3.Distance(firstTile, secondTile) >= moveLimit)
+        {
+            returnVal = true;
+        } else
+        {
+            returnVal = false;
+        }
+
+        return returnVal;
+    }
+
     // https://stackoverflow.com/a/48353867 quite helpful, simple though.
-    public Vector3 MovePlayer()
+    private Vector3 MovePlayer()
     {
         Vector3Int var;
         Vector3 returnVar;
@@ -64,13 +74,18 @@ public class PlayerMovement : MonoBehaviour
 
         var = groundMap.WorldToCell(pos);
 
-        if (isTileEmpty(var))
+        // this is HORRIFIC, but it works.
+        if (canMoveToTile(var))
         {
             returnVar = transform.position; // returns the current position, so that you don't move.
-            Debug.Log("sorry, you cannot move to an empty tile");
-        } else
+            Debug.Log("sorry, you cannot move there");
+        } else if (!MeasureBetweenTiles(groundMap.WorldToCell(transform.position), var))
         {
             returnVar = groundMap.CellToWorld(var); // returns the new position
+        } else
+        {
+            returnVar = transform.position;
+            Debug.Log("sory, that is outside of your movelimit");
         }
 
         return returnVar;
