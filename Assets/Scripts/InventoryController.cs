@@ -11,12 +11,7 @@ public class InventoryController : MonoBehaviour
     //\\--------------------------------------------------------\\//
     void Start()
     {
-        AddItem("banana", "potassium");
-        AddItem("wabbajack", "it's all you've got");
 
-        RemoveItem(0);
-
-        ListInfo(0);
     }
 
     // Update is called once per frame
@@ -50,8 +45,12 @@ public class InventoryController : MonoBehaviour
             Debug.Log("that doesn't exist");
         }
     }
-    
-
 
 }
 
+public class Item
+{
+    public string name;
+    public string description;
+    public int spawnpercent;
+}
