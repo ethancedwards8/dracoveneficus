@@ -21,6 +21,11 @@ public class PlayerMovement : MonoBehaviour
 
     [HideInInspector] public Vector3Int entityTile;
 
+    private void Start()
+    {
+        
+    }
+
     private void Update()
     {
         entityTile = this.groundMap.WorldToCell(transform.position);
@@ -79,10 +84,12 @@ public class PlayerMovement : MonoBehaviour
         {
             returnVar = transform.position; // returns the current position, so that you don't move.
             Debug.Log("sorry, you cannot move there");
-        } else if (!MeasureBetweenTiles(groundMap.WorldToCell(transform.position), var))
+        } 
+        else if (!MeasureBetweenTiles(groundMap.WorldToCell(transform.position), var))
         {
             returnVar = groundMap.CellToWorld(var); // returns the new position
-        } else
+        } 
+        else
         {
             returnVar = transform.position;
             Debug.Log("sory, that is outside of your movelimit");
