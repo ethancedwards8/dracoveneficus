@@ -7,10 +7,10 @@ public class EnemyDeathDetector : MonoBehaviour
     // horribly messy, but it works.
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("collision");
         if (collision.gameObject.name == "Player")
         {
-            Destroy(gameObject);
+            Destroy(gameObject.transform.parent.gameObject);
+            //Destroy(gameObject);
         }
     }
 }

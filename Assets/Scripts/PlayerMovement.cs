@@ -92,7 +92,7 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             returnVar = transform.position;
-            Debug.Log("sory, that is outside of your movelimit");
+            Debug.Log("sorry, that is outside of your movelimit");
         }
 
         return returnVar;

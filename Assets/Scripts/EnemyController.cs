@@ -16,6 +16,8 @@ public class EnemyController : MonoBehaviour
 
     private Vector3Int basePos;
 
+    Transform gb;
+
 
     private void Start()
     {
@@ -23,7 +25,8 @@ public class EnemyController : MonoBehaviour
         transform.position = this.groundMap.CellToWorld(this.entityTile); // snaps to grid
         basePos = this.entityTile; // reference for the Move()
 
-        Instantiate(prefab, transform.position - new Vector3(0, moveLimit, -30), Quaternion.identity, transform).gameObject.AddComponent<EnemyDeathDetector>(); // cheating and adding an unecessary script
+        gb = Instantiate(prefab, transform.position - new Vector3(0, moveLimit, -30), Quaternion.identity, transform); // cheating and adding an unecessary script
+        gb.gameObject.AddComponent<EnemyDeathDetector>();
         // https://stackoverflow.com/questions/51068774/unity-rotate-an-object-around-a-point-in-2d need to use this 
 
         StartCoroutine(Move());
@@ -34,8 +37,7 @@ public class EnemyController : MonoBehaviour
     {
         transform.Rotate(0, 0, -moveLimit*3); // decent offset to make everything align
 
-        for (int i = 0; i < moveLimit * 6; i++)
-        {
+        while (gb.gameObject.activeSelf) {
             yield return Utility.wait(speed);
             transform.Rotate(0, 0, 360 / (moveLimit * 6));
         }
