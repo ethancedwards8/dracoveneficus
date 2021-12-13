@@ -13,4 +13,13 @@ public static class Utility
             yield return null;
         }
     }
+
+    // https://www.delftstack.com/howto/csharp/generate-a-random-float-in-csharp/
+    // https://www.codegrepper.com/code-examples/csharp/c%23+random+float+between+two+numbers
+    public static float GenerateRandomFloat(float min, float max)
+    {
+        System.Random random = new System.Random();
+        double val = (random.NextDouble() * (max - min) + min);
+        return (float)val;
+    }
 }

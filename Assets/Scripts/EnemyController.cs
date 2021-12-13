@@ -10,7 +10,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] public int moveLimit = 1;
 
     [HideInInspector] public Vector3Int entityTile;
-    [SerializeField] private Tilemap groundMap;
+    private Tilemap groundMap;
 
     [SerializeField] public Transform prefab;
 
@@ -18,14 +18,17 @@ public class EnemyController : MonoBehaviour
 
     Transform gb;
 
+    [SerializeField] public float points = 5f;
 
     private void Start()
     {
+        groundMap = GameObject.Find("Ground").GetComponent<Tilemap>();
+
         entityTile = this.groundMap.WorldToCell(transform.position);
         transform.position = this.groundMap.CellToWorld(this.entityTile); // snaps to grid
         basePos = this.entityTile; // reference for the Move()
 
-        gb = Instantiate(prefab, transform.position - new Vector3(0, moveLimit, -30), Quaternion.identity, transform); // cheating and adding an unecessary script
+        gb = Instantiate(prefab, transform.position - new Vector3(0, moveLimit, -5), Quaternion.identity, transform); // cheating and adding an unecessary script
         gb.gameObject.AddComponent<EnemyDeathDetector>();
         // https://stackoverflow.com/questions/51068774/unity-rotate-an-object-around-a-point-in-2d need to use this 
 
@@ -38,7 +41,7 @@ public class EnemyController : MonoBehaviour
         transform.Rotate(0, 0, -moveLimit*3); // decent offset to make everything align
 
         while (gb.gameObject.activeSelf) {
-            yield return Utility.wait(speed);
+            yield return Utility.wait((Utility.GenerateRandomFloat(1f, 2f) + 1f) / this.speed);
             transform.Rotate(0, 0, 360 / (moveLimit * 6));
         }
 

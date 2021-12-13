@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -21,15 +22,21 @@ public class PlayerMovement : MonoBehaviour
 
     [HideInInspector] public Vector3Int entityTile;
 
+    [SerializeField] public float playerScore = 0f;
+
+    [SerializeField] TMP_Text scoreText;
+
     private void Start()
     {
-        
+        this.scoreText.text = "Score: " + this.playerScore.ToString();
     }
 
     private void Update()
     {
         entityTile = this.groundMap.WorldToCell(transform.position);
         UpdateFogOfWar();
+
+        this.scoreText.text = "Score: " + this.playerScore.ToString();
 
         if (Input.GetMouseButtonDown(0))
         {
